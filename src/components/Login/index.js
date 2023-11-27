@@ -5,8 +5,8 @@ import './index.css'
 
 class Login extends Component {
   state = {
-    userName: '',
-    passWord: '',
+    usernameInput: '',
+    passwordInput: '',
     showSubmitError: false,
     errorMsg: '',
   }
@@ -26,11 +26,11 @@ class Login extends Component {
   onSubmitForm = async event => {
     event.preventDefault()
 
-    const {userName, passWord} = this.state
-    const userDetails = {userName, passWord}
+    const {usernameInput, passwordInput} = this.state
+    const userDetails = {username: usernameInput, password: passwordInput}
     const apiUrl = 'https://apis.ccbp.in/login'
     const options = {
-      METHOD: 'POST',
+      method: 'POST',
       body: JSON.stringify(userDetails),
     }
     const response = await fetch(apiUrl, options)
@@ -43,16 +43,19 @@ class Login extends Component {
   }
 
   onChangeUserName = event => {
-    this.setState({userName: event.target.value})
+    this.setState({usernameInput: event.target.value})
   }
 
   onChangePassword = event => {
-    this.setState({passWord: event.target.value})
+    this.setState({passwordInput: event.target.value})
   }
 
   render() {
-    const {userName, passWord, showSubmitError, errorMsg} = this.state
+    const {usernameInput, passwordInput, showSubmitError, errorMsg} = this.state
     const token = Cookies.get('jwt_token')
+    if (token !== undefined) {
+      return <Redirect to="/" />
+    }
 
     return (
       <div className="app-container">
@@ -70,7 +73,7 @@ class Login extends Component {
               type="text"
               className="username-input-field"
               id="userName"
-              value={userName}
+              value={usernameInput}
               onChange={this.onChangeUserName}
               placeholder="Username"
             />
@@ -84,7 +87,7 @@ class Login extends Component {
               type="password"
               className="username-input-field"
               id="passWord"
-              value={passWord}
+              value={passwordInput}
               onChange={this.onChangePassword}
               placeholder="Password"
             />
